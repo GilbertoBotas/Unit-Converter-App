@@ -77,7 +77,11 @@ fun UnitConverter() {
     fun convertUnits() {
         val inputValueDouble = inputValue.toDoubleOrNull() ?: 0.0
         val result = (inputValueDouble * iConversionFactor.doubleValue * 100.0 / oConversionFactor.doubleValue).toInt() / 100.0
-        outputValue = result.toString()
+        outputValue =
+            if(inputValueDouble == 0.0)
+                "0"
+            else
+                result.toString()
     }
 
     Column(
@@ -96,9 +100,16 @@ fun UnitConverter() {
         OutlinedTextField(
             value = inputValue,
             shape = shapes.large,
-            onValueChange = {
-                inputValue = it
-                convertUnits()
+            onValueChange = { newValue ->
+                val count = newValue.count { it == '.' }
+                if(!newValue.contains(",")
+                    && !newValue.contains("-")
+                    && !newValue.contains(" ")
+                    && !newValue.startsWith(".")
+                    && count <= 1) {
+                    inputValue = newValue
+                    convertUnits()
+                }
             },
             label = { Text(text = "Input") },
             keyboardOptions = KeyboardOptions(
