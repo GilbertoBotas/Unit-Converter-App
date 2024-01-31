@@ -101,12 +101,8 @@ fun UnitConverter() {
             value = inputValue,
             shape = shapes.large,
             onValueChange = { newValue ->
-                val count = newValue.count { it == '.' }
-                if(!newValue.contains(",")
-                    && !newValue.contains("-")
-                    && !newValue.contains(" ")
-                    && !newValue.startsWith(".")
-                    && count <= 1) {
+                val value = newValue.toDoubleOrNull()
+                if((value != null || newValue == "") && !newValue.contains(" ")) {
                     inputValue = newValue
                     convertUnits()
                 }
